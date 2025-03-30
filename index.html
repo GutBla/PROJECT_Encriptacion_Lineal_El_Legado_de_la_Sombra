@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Legado de la Sombra</title>
+
+    <!-- Preconexión para fuentes externas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Hojas de estilo -->
+    <link rel="stylesheet" href="css/game-styles.css">
+    <link rel="stylesheet" href="css/crypto-styles.css">
+
+    <!-- Fuentes e iconos -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <!-- Precarga de scripts matemáticos -->
+    <link rel="preload" href="https://polyfill.io/v3/polyfill.min.js?features=es6" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" as="script">
+</head>
+<body class="animated-bg">
+<!-- Contenedor principal del juego -->
+<div id="game-container"></div>
+
+<!-- Botón flotante y modal del encriptador -->
+<button id="cryptoBtn" class="floating-crypto-btn">
+    <span class="material-icons">calculate</span>
+</button>
+
+<div id="cryptoModal" class="crypto-modal">
+    <div class="crypto-modal-content">
+        <!-- Encabezado del modal -->
+        <div class="crypto-modal-header">
+            <h2>
+                <span class="material-icons">enhanced_encryption</span>
+                Herramienta Criptográfica
+            </h2>
+            <span id="closeCryptoModal" class="crypto-close-btn">
+                <span class="material-icons">close</span>
+            </span>
+        </div>
+
+        <!-- Cuerpo del modal -->
+        <div class="crypto-modal-body">
+            <!-- Selector de modo -->
+            <div class="crypto-mode-selector">
+                <button class="crypto-mode-btn active" data-mode="encrypt">
+                    <span class="material-icons">lock</span> Encriptar
+                </button>
+                <button class="crypto-mode-btn" data-mode="decrypt">
+                    <span class="material-icons">lock_open</span> Desencriptar
+                </button>
+            </div>
+
+            <!-- Controles criptográficos -->
+            <div class="crypto-controls">
+                <div class="crypto-input-group">
+                    <label for="cryptoBlockSize">
+                        <span class="material-icons">view_module</span> Tamaño de bloque:
+                    </label>
+                    <select id="cryptoBlockSize">
+                        <option value="1" selected>1x1</option>
+                        <option value="2">2x2</option>
+                        <option value="3">3x3</option>
+                        <option value="4">4x4</option>
+                    </select>
+                </div>
+
+                <div class="crypto-input-group">
+                    <label for="cryptoInput">
+                        <span class="material-icons">input</span> Entrada:
+                    </label>
+                    <textarea id="cryptoInput" placeholder="Ingresa tu texto aquí..."></textarea>
+                </div>
+
+                <div class="crypto-actions">
+                    <button id="processCryptoBtn">
+                        <span class="material-icons">play_arrow</span> Procesar
+                    </button>
+                    <button id="pasteCryptoBtn">
+                        <span class="material-icons">content_paste</span> Pegar
+                    </button>
+                    <button id="clearCryptoBtn">
+                        <span class="material-icons">clear</span> Borrar
+                    </button>
+                    <button id="copyCryptoBtn">
+                        <span class="material-icons">content_copy</span> Copiar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Área de resultados -->
+            <div class="crypto-output-container">
+                <div id="cryptoOutput"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts matemáticos con carga diferida -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<!-- Scripts del juego -->
+<script src="js/game-logic.js"></script>
+<script src="js/crypto-tool.js"></script>
+</body>
+</html>

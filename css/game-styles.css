@@ -1,0 +1,839 @@
+/* =============================================
+   VARIABLES GLOBALES
+   ============================================= */
+:root {
+    --color-primary: #7D0A0A;
+    --color-secondary: #1D1616;
+    --color-accent: #BF3131;
+    --color-text: #1D1616;
+    --color-box: #EAD196;
+    --color-box-border: #BF313155;
+    --texture-overlay: url('images/old-paper-texture.jpg');
+    --color-tape: rgba(255, 255, 255, 0.4);
+    --polaroid-frame: #f0f0f0;
+}
+
+/* =============================================
+   ESTILOS BASE
+   ============================================= */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Courier New', monospace;
+    background: linear-gradient(45deg, #1D1616, #7D0A0A, #1D1616);
+    background-size: 200% 200%;
+    color: var(--color-text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: gradient-shift 6s ease infinite, subtle-pulse 4s ease infinite; /* Más rápido */
+    position: relative;
+    z-index: 0;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: -1;
+    animation: pulse-opacity 5s ease infinite; /* Más rápido */
+}
+
+@keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse-opacity {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 0.9; }
+}
+
+html, body {
+    overflow: hidden;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* =============================================
+   CONTENEDOR PRINCIPAL DEL JUEGO
+   ============================================= */
+#game-container {
+    width: 70%;
+    max-width: 650px;
+    min-height: 500px;
+    background-color: var(--color-box);
+    position: relative;
+    padding: 2rem;
+    margin: 20px;
+    box-shadow:
+            0 0 30px rgba(0, 0, 0, 0.3),
+            0 0 0 10px var(--color-secondary),
+            0 0 0 12px var(--color-primary);
+    transform: perspective(1000px) rotateX(2deg) rotateY(1deg);
+    background-image:
+            linear-gradient(to bottom right, transparent 60%, rgba(0,0,0,0.05)),
+            var(--texture-overlay);
+    background-size: cover;
+    border: 2px solid var(--color-primary);
+}
+
+#game-container::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 1px solid rgba(125, 10, 10, 0.2);
+    pointer-events: none;
+}
+
+#game-container::after {
+    content: "TOP SECRET";
+    position: absolute;
+    top: -20px;
+    right: 20px;
+    background: var(--color-accent);
+    color: var(--color-box);
+    padding: 8px 20px;
+    font-family: 'Special Elite', cursive;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+    text-transform: uppercase;
+    transform: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    z-index: 10;
+}
+
+/* =============================================
+   TIPOGRAFÍA Y TÍTULOS
+   ============================================= */
+h1, h2, h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--color-text);
+    font-family: 'Special Elite', cursive;
+    letter-spacing: 1px;
+}
+
+h1 {
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    margin-top: 0;
+    animation: typing 3.5s steps(40, end),
+    blink-caret 0.75s step-end infinite;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid var(--color-accent);
+}
+
+h2 {
+    font-size: 1.6rem;
+    border-bottom: 2px solid var(--color-accent);
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+/* =============================================
+   ESTRUCTURA DE CAPÍTULOS
+   ============================================= */
+.chapter-title {
+    font-family: 'Special Elite', cursive;
+    color: var(--color-primary);
+    text-align: center;
+    margin: 1.5rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-accent);
+    position: relative;
+}
+
+.chapter-title::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 25%;
+    width: 50%;
+    height: 1px;
+    background: var(--color-accent);
+}
+
+.game-section {
+    background-color: transparent;
+    padding: 1.5rem 0;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* =============================================
+   SISTEMA DE DIÁLOGOS
+   ============================================= */
+.game-dialog {
+    display: flex;
+    align-items: flex-start;
+    gap: 25px;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: linear-gradient(to bottom, #fff9ee 0%, #f5e6c4 100%);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+    position: relative;
+    transform: rotate(-0.5deg);
+}
+
+.character-image-container {
+    flex: 0 0 220px;
+    position: relative;
+    align-self: center;
+}
+
+.character-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border: 3px solid var(--color-text);
+    padding: 5px;
+    background: white;
+    box-shadow:
+            15px 15px 0 rgba(0, 0, 0, 0.1),
+            0 0 0 0px rgba(191, 49, 49, 0);
+    transform:
+            rotate(-3deg)
+            translateY(0)
+            scale(1);
+    transition:
+            transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            box-shadow 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            border-color 0.4s ease,
+            filter 0.5s ease;
+    filter:
+            grayscale(15%)
+            contrast(95%)
+            brightness(0.98);
+    position: relative;
+    z-index: 1;
+    will-change: transform, box-shadow;
+}
+
+.character-image:hover {
+    transform:
+            rotate(0deg)
+            translateY(-10px)
+            scale(1.03);
+    box-shadow:
+            5px 5px 0 rgba(0, 0, 0, 0.1),
+            0 0 0 3px rgba(191, 49, 49, 0.3);
+    border-color: var(--color-accent);
+    filter:
+            grayscale(0%)
+            contrast(100%)
+            brightness(1.05);
+    z-index: 2;
+}
+
+.character-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    mix-blend-mode: overlay;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.character-image:hover::after {
+    opacity: 1;
+}
+
+.character-image::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    right: -6px;
+    bottom: -6px;
+    border: 2px solid rgba(191, 49, 49, 0);
+    transition: all 0.5s ease;
+    z-index: -1;
+}
+
+.character-image:hover::before {
+    border-color: rgba(191, 49, 49, 0.2);
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+}
+
+.dialog-text-container {
+    flex: 1;
+    position: relative;
+    padding: 20px;
+    margin-left: 30px;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+}
+
+.dialog-text-container::before {
+    content: "";
+    position: absolute;
+    left: -20px;
+    top: 40px;
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-right: 25px solid rgba(255,255,255,0.9);
+    border-bottom: 15px solid transparent;
+}
+
+.game-dialog::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 15px;
+    background-color: var(--color-tape);
+    opacity: 0.7;
+    border-radius: 0 0 3px 3px;
+}
+
+.character-name {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+}
+
+/* =============================================
+   ELEMENTOS GRÁFICOS Y EFECTOS VISUALES
+   ============================================= */
+.scene-image {
+    display: block;
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    background: var(--polaroid-frame);
+    padding: 15px 15px 60px !important;
+    transform: rotate(3deg) scale(0.98);
+    position: relative;
+    max-width: 80%;
+    margin: 30px auto;
+    box-shadow:
+            0 4px 15px rgba(0,0,0,0.2),
+            0 0 0 1px rgba(255,255,255,0.1) inset;
+    filter:
+            grayscale(100%)
+            sepia(30%)
+            contrast(120%)
+            brightness(0.9)
+            blur(0.8px);
+    transition:
+            filter 1.2s cubic-bezier(0.65, 0, 0.35, 1),
+            transform 0.8s cubic-bezier(0.18, 0.89, 0.32, 1.28),
+            box-shadow 0.6s ease;
+    will-change: filter, transform;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.scene-image:hover {
+    filter:
+            grayscale(0%)
+            sepia(0%)
+            contrast(105%)
+            brightness(1.05)
+            blur(0);
+    transform:
+            rotate(1deg)
+            scale(1.03);
+    box-shadow:
+            0 8px 25px rgba(0,0,0,0.3),
+            0 0 0 2px rgba(191, 49, 49, 0.2) inset;
+    z-index: 2;
+}
+
+.scene-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+            135deg,
+            rgba(191, 49, 49, 0.1) 0%,
+            rgba(255,255,255,0) 50%,
+            rgba(125, 10, 10, 0.1) 100%
+    );
+    mix-blend-mode: overlay;
+    opacity: 0;
+    transition: opacity 1s ease 0.3s;
+}
+
+.scene-image:hover::before {
+    opacity: 1;
+}
+
+.scene-image::after {
+    content: attr(alt);
+    position: absolute;
+    bottom: 25px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Special Elite', cursive;
+    color: var(--color-text);
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    opacity: 0.9;
+    transition: all 0.5s ease;
+    transform: translateY(5px);
+}
+
+.scene-image:hover::after {
+    opacity: 1;
+    transform: translateY(0);
+    color: var(--color-accent);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* =============================================
+   COMPONENTES DE INTERFAZ
+   ============================================= */
+/* Botones */
+.game-button {
+    background: linear-gradient(to bottom, #7D0A0A 0%, #4A0808 100%);
+    color: var(--color-box);
+    padding: 0.8rem 2rem 0.8rem 1.5rem;
+    border: 2px solid var(--color-box);
+    border-radius: 3px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 1.5rem auto;
+    width: auto;
+    text-align: center;
+    font-family: 'Special Elite', cursive;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: visible;
+}
+
+.game-button .material-icons {
+    font-size: 1.2rem;
+}
+
+.game-button::before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.game-button:hover {
+    background: linear-gradient(to bottom, #9D2A2A 0%, #6A1818 100%);
+    letter-spacing: 2px;
+    box-shadow: 0 0 15px rgba(191, 49, 49, 0.5);
+}
+
+/* Elementos de formulario */
+.input-container {
+    margin: 20px 0;
+    position: relative;
+}
+
+.game-input {
+    width: 90%;
+    padding: 12px 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    background: rgba(255,255,255,0.8);
+    border: 2px solid var(--color-primary);
+    border-radius: 0;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+    display: block;
+    caret-color: var(--color-primary);
+    margin-right: auto;
+}
+
+.game-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 5px rgba(191, 49, 49, 0.5);
+}
+
+/* Opciones de respuesta */
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.option-button {
+    background: rgba(251, 234, 192, 0.7);
+    color: var(--color-text);
+    padding: 15px;
+    border: none;
+    border-left: 4px solid var(--color-accent);
+    text-align: left;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.option-button:hover {
+    background: rgba(191, 49, 49, 0.9);
+    color: white;
+    transform: translateX(5px);
+}
+
+/* Barra de progreso */
+.progress-container {
+    width: 100%;
+    background-color: rgba(29, 22, 22, 0.3); /* Fondo oscuro semitransparente */
+    border: 1px solid var(--color-primary);
+    margin: 20px 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow:
+            inset 0 1px 3px rgba(0,0,0,0.1),
+            0 0 5px rgba(125, 10, 10, 0.3); /* Sombra exterior roja */
+}
+
+.progress-bar {
+    height: 20px;
+    width: 0%;
+    background: linear-gradient(
+            to right,
+            var(--color-primary),
+            var(--color-accent)
+    ); /* Degradado rojo */
+    border-radius: 8px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+            0 0 5px rgba(191, 49, 49, 0.7),
+            inset 0 1px 1px rgba(255,255,255,0.2); /* Efecto de brillo interior */
+}
+
+/* Elementos matemáticos */
+.math-display {
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(255,255,255,0.9);
+    border-left: 3px solid var(--color-accent);
+    overflow-x: auto;
+}
+
+/* =============================================
+   TRANSICIONES Y ANIMACIONES
+   ============================================= */
+/* Transición entre capítulos */
+.chapter-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    animation: fadeOut 2s ease-in-out forwards;
+}
+
+.chapter-transition-content {
+    color: var(--color-box);
+    font-family: 'Special Elite', cursive;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+/* Transición entre escenas */
+.scene-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.scene-transition-content {
+    color: white;
+    font-family: 'Special Elite', cursive;
+    font-size: 1.8rem;
+    text-align: center;
+    opacity: 0;
+    animation: fadeInOut 1.5s ease-in-out forwards;
+}
+
+/* Efecto de máquina de escribir */
+.typewriter {
+    overflow: hidden;
+    border-right: 3px solid var(--color-accent);
+    white-space: nowrap;
+    margin: 0 auto;
+    letter-spacing: 2px;
+    animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+.dialog-content {
+    overflow: hidden;
+    border-right: 2px solid var(--color-accent);
+    white-space: pre-wrap;
+    margin: 0;
+    letter-spacing: 1px;
+    display: inline-block;
+}
+
+.typewriter-effect {
+    animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+/* =============================================
+   MENSAJES DE FEEDBACK (ERROR/ÉXITO)
+   ============================================= */
+.error-message,
+.feedback-message {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px;
+    margin: 1rem 0;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    animation: slideInFromBottom 0.3s ease-out;
+}
+
+
+.error-message {
+    background-color: rgba(191, 49, 49, 0.1);
+    border-left: 4px solid var(--color-accent);
+    color: var(--color-text);
+}
+
+
+.feedback-message.correct {
+    background-color: rgba(46, 125, 50, 0.1);
+    border-left: 4px solid #2e7d32;
+}
+
+
+.feedback-message.incorrect {
+    background-color: rgba(255, 179, 0, 0.1);
+    border-left: 4px solid #ffb300;
+}
+
+
+.error-message .material-icons,
+.feedback-message .material-icons {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.error-message .material-icons {
+    color: var(--color-accent);
+}
+
+.feedback-message.correct .material-icons {
+    color: #2e7d32;
+}
+
+.feedback-message.incorrect .material-icons {
+    color: #ffb300;
+}
+
+
+.error-message p,
+.feedback-message .dialog-content {
+    margin: 0;
+    flex-grow: 1;
+}
+
+/* Keyframes de animaciones */
+@keyframes slideInFromBottom {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Keyframes de animaciones */
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: var(--color-accent); }
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; visibility: hidden; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: scale(0.9); }
+    40% { opacity: 1; transform: scale(1.1); }
+    60% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 0; transform: scale(0.9); }
+}
+
+@keyframes slideInFromRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInFromLeft {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInFromBottom {
+    from {
+        transform: translateY(100%) scale(0.9);
+        opacity: 0;
+        filter: blur(2px);
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+@keyframes slideOutToBottom {
+    from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        filter: blur(0);
+    }
+    to {
+        transform: translateY(100%) scale(0.9);
+        opacity: 0;
+        filter: blur(2px);
+    }
+}
+
+@keyframes borderGlow {
+    0% { box-shadow: 0 0 0 0 rgba(191, 49, 49, 0.4); }
+    50% { box-shadow: 0 0 0 3px rgba(191, 49, 49, 0.1); }
+    100% { box-shadow: 0 0 0 0 rgba(191, 49, 49, 0); }
+}
+
+/* Clases para animaciones */
+.slide-in-right {
+    animation: slideInFromRight 0.5s ease-out forwards;
+}
+
+.slide-in-left {
+    animation: slideInFromLeft 0.5s ease-out forwards;
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease-in forwards;
+}
+
+/* =============================================
+   DISEÑO RESPONSIVE
+   ============================================= */
+@media (max-width: 768px) {
+    #game-container {
+        width: 90%;
+        padding: 1rem;
+        margin: 10px;
+        transform: none;
+    }
+
+    .game-dialog {
+        flex-direction: column;
+        align-items: center;
+        transform: rotate(0deg);
+        margin: 1rem 0;
+        padding: 1rem;
+    }
+
+    .character-image-container {
+        flex: 0 0 auto;
+        width: 70%;
+        max-width: 220px;
+    }
+
+    .character-image {
+        transform: rotate(0deg);
+    }
+
+    .dialog-text-container {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .dialog-text-container::before {
+        display: none;
+    }
+
+    .game-dialog::after {
+        left: 50%;
+        transform: translateX(-50%) rotate(-10deg);
+    }
+
+    .scene-image {
+        max-width: 95%;
+    }
+}
+
+/* =============================================
+   ELEMENTOS VARIOS
+   ============================================= */
+.loading-text {
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text);
+}
+
