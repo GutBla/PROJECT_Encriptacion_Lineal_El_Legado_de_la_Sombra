@@ -241,6 +241,7 @@ X & M & U & N \\
 D & O & 0 & 0
 \end{bmatrix}
 $$
+
 ---
 ## **Juego El Legado de la Sombra**
 
