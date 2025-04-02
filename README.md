@@ -124,16 +124,16 @@ Podemos codificar un mensaje realizando una pequeña biyección con las letras d
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 |
 
-Sea entonces un mensaje compuesto de $*m ∈ ℕ*$ caracteres, donde dado la tabla anterior podemos obtener un arreglo con los números que componen el mensaje. Teniendo entonces que los elementos en el arreglo, son los $*x_i ∈ [0, 27]*$ que representan los caracteres del mensaje. Donde el cero está reservado para espacios vacíos.
+Sea entonces un mensaje compuesto de $m ∈ ℕ$ caracteres, donde dado la tabla anterior podemos obtener un arreglo con los números que componen el mensaje. Teniendo entonces que los elementos en el arreglo, son los $x_i ∈ [0, 27]$ que representan los caracteres del mensaje. Donde el cero está reservado para espacios vacíos.
 
-| $*x_1*$ | ⋯ | $*x_i*$ | ⋯ | $*x_m*$ |
+| $x_1$ | ⋯ | $x_i$ | ⋯ | $x_m$ |
 | --- | --- | --- | --- | --- |
 
 Esta sería una encriptación muy sencilla, pues podría descifrarse investigando qué letra le corresponde a cada número.
 
-Ahora dividamos el arreglo en partes iguales, supongamos que dividimos en $*n≤m*$ partes iguales, con $*n∈ℕ*$, donde si el arreglo no puede ser divisible exactamente podemos aumentar el arreglo. Si $n \lceil\frac{m}{n}\rceil > m$ entonces el arreglo será de $m+ ( n \lceil\frac{m}{n}\rceil -m)$ entradas, donde estas últimas entradas añadidas a la cadena serían llenadas por el valor cero. Ahora nuestro arreglo sería de longitud $m_{1}=m+ ( n \lceil\frac{m}{n}\rceil -m)=n \lceil\frac{m}{n}\rceil$, donde la longitud de cada subarreglo será $\lceil\frac{m}{n}\rceil$.
+Ahora dividamos el arreglo en partes iguales, supongamos que dividimos en $n≤m$ partes iguales, con $n∈ℕ$, donde si el arreglo no puede ser divisible exactamente podemos aumentar el arreglo. Si $n \lceil\frac{m}{n}\rceil>m$ entonces el arreglo será de $m+(n\lceil\frac{m}{n}\rceil-m)$ entradas, donde estas últimas entradas añadidas a la cadena serían llenadas por el valor cero. Ahora nuestro arreglo sería de longitud $m_{1}=m+(n\lceil\frac{m}{n}\rceil-m)=n\lceil\frac{m}{n}\rceil$, donde la longitud de cada subarreglo será $\lceil\frac{m}{n}\rceil$.
 
-| $*x_1*$ | ⋯ | $*x_i*$ | ⋯ | $*x_m*$ | $0_{m + 1}$ | ⋯ | $0_{n \lceil\frac{m}{n}\rceil=m_{1}}$ |
+| $x_1$ | ⋯ | $x_i$ | ⋯ | $x_m$ | $0_{m + 1}$ | ⋯ | $0_{n \lceil\frac{m}{n}\rceil=m_{1}}$ |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 
 En todo caso, ahora el arreglo es divisible y por lo tanto podemos particionarlo de la siguiente manera.
@@ -153,8 +153,6 @@ $$
 
 Obteniendo así una matriz de $\frac{m_{1}}{n} \times n$. Ahora podemos modificar la matriz para hacerla más difícil de descifrar. Esto mediante transformaciones lineales.
 
-Sea
-
 $$
 \begin{aligned}
 T &: \mathbb{R}^{\frac{m_{1}}{n} \times n} \to \mathbb{R}^{\frac{m_{1}}{n} \times n}, \\
@@ -162,16 +160,51 @@ M &\mapsto (E)M = M^{\prime}
 \end{aligned}
 $$
 
-Donde $M \in \mathcal{M}_{\frac{m_{1}}{n} \times n}(\mathbb{K})$, es decir la matriz de caracteres y $E \in \mathcal{M}_{\frac{m_{1}}{n} \times \frac{m_{1}}{n}}(\mathbb{K})$, la matriz de encriptación y por lo tanto *M*′ la matriz encriptada, con lo cual transformamos la matriz original en una mucho más complicada de descifrar, aun así dado de que necesitaríamos desencriptar el mensaje, es necesario que *E* sea invertible, es decir $∃E^{−1}$ tal que $*EE^{−1} = I*$, con $E,I \in \mathcal{M}_{\frac{m_{1}}{n} \times \frac{m_{1}}{n}}(\mathbb{K})$.
+Donde 
 
-Ahora bien, podemos partir de la matriz identidad para definir a *E* como el conjunto de operaciones elementales de matrices aplicadas a la matriz identidad $*E = (On(…(O1(I))))*$, para construir la matriz que nosotros deseemos mediante operaciones elementales. Donde en efecto $*E^{−1}= ( O_{1}^{-1}(…( O_{n}^{-1}(I))))*$, así el proceso de desencriptación vendría dado por:
+$$
+M \in \mathcal{M}_{\frac{m_1}{n}\times n}(\mathbb{K})
+$$
+
+es decir, la matriz de caracteres, y 
+
+$$
+E \in \mathcal{M}_{\frac{m_1}{n}\times \frac{m_1}{n}}(\mathbb{K})
+$$
+
+es la matriz de encriptación, de modo que $M'$ es la matriz encriptada. Con esto transformamos la matriz original en una mucho más complicada de descifrar. Aun así, dado que necesitaremos desencriptar el mensaje, es necesario que $E$ sea invertible, es decir, que exista $E^{-1}$ tal que:
+
+$$
+EE^{-1} = I
+$$
+
+
+con 
+$$E,I\in\mathcal{M}_{\frac{m_1}{n}\times\frac{m_1}{n}}(\mathbb{K}).$$
+
+
+Ahora bien, podemos partir de la matriz identidad para definir a \(E\) como el conjunto de operaciones elementales de matrices aplicadas a la matriz identidad:
+
+$$
+E = O_n\Big(\dots\big(O_1(I)\big)\Big)
+$$
+
+para construir la matriz que deseamos mediante operaciones elementales. Donde, en efecto,
+
+$$
+E^{-1} = O_{1}^{-1}\Big(\dots\big(O_{n}^{-1}(I)\big)\Big).
+$$
+
+Así, el proceso de desencriptación vendría dado por:
 
 $$
 \begin{aligned}
 T^{-1} &: \mathbb{R}^{\frac{m_{1}}{n} \times n} \to \mathbb{R}^{\frac{m_{1}}{n} \times n}, \\
-M^{\prime} &\mapsto (E^{-1})M^{\prime} = M
+M^{\prime} &\mapsto (E^{-1})M^{\prime} = M.
 \end{aligned}
 $$
+
+
 
 Recordando que luego las columnas hay que organizarlas como vectores horizontales consecutivos y traducir con la tabla inicial o tomar la traspuesta de la matriz de valores y traducir directamente los valores, así podremos leer el mensaje de izquierda a derecha y de arriba a abajo. Teniendo así que podemos tener cualquier matriz según lo deseemos para encriptar nuestros mensajes, siempre y cuando se use la inversa correspondiente.
 
